@@ -1,28 +1,17 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-struct Keyboard
+class Keyboard
 {
-    static const char Keyboard::keyboard_[16];
-};
+public:
+    
 
-const char Keyboard::keyboard_[16] = {
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        'q',
-        'w',
-        'e',
-        'r',
-        't',
-        'y',
-        'u'
-    };
+    void key_down(int chip8_key);
+    void key_up(int chip8_key);
+
+    bool is_pressed(int chip8_key) const;
+private:
+    bool keys_[16] = {};
+};
 
 #endif //KEYBOARD_H

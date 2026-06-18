@@ -3,6 +3,8 @@
 Opcode get_opcode(uint16_t opcode)
 {
     Opcode result;
+    
+    result.op = (opcode & 0xF000) >> 12;
     result.x   = (opcode & 0x0F00) >> 8;
     result.y   = (opcode & 0x00F0) >> 4;
     result.n   = opcode & 0x000F;

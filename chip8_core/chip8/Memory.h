@@ -4,11 +4,11 @@
 #include <cstdint>
 #include <iomanip>
 #include <stack>
+#include<fstream>
 
 class Memory
 {
 public:
-    friend class CPU;
 
     Memory() = default;
 
@@ -22,12 +22,13 @@ public:
 
     uint16_t fetch_opcode(uint16_t emulated_address);
 
+    bool load_rom(const std::string& path);
+
 private:
-    uint8_t memory[4096] = {0};
+    uint8_t memory_[4096] = {0};
     uint16_t programCounter;
     
-    // The stack is an array of 16 16-bit values ​​used to store the address to which the interpreter should return after a subroutine completes.
-    std::stack<uint16_t> stack_; 
+    // The stack is an array of 16 16-bit values ​​used to store the address to which the interpreter should return after a subroutine completes. 
 };
 
 

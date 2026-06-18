@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
+
 # --------------------------------------------------
 # SDL2
 # --------------------------------------------------
@@ -21,7 +23,6 @@ find_package(SDL2 REQUIRED)
 # --------------------------------------------------
 
 add_library(chip8_core
-    chip8_core/chip8/Chip8.cpp
     chip8_core/chip8/CPU.cpp
     chip8_core/chip8/Display.cpp
     chip8_core/chip8/Keyboard.cpp
