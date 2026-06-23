@@ -4,13 +4,15 @@
 #include <cstdint>
 #include <iomanip>
 #include <stack>
-#include<fstream>
+#include <fstream>
+
+#include "Font.h"
 
 class Memory
 {
 public:
 
-    Memory() = default;
+    Memory();
 
     uint8_t read(uint16_t address) const;
     void write(uint16_t address, uint8_t value);

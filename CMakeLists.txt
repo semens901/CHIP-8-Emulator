@@ -29,6 +29,7 @@ add_library(chip8_core
     chip8_core/chip8/Memory.cpp
     chip8_core/chip8/Font.h
     chip8_core/chip8/Opcode.cpp
+    chip8_core/chip8/Speaker.cpp
 )
 
 target_include_directories(

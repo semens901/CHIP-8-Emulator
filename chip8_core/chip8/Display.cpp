@@ -1,7 +1,6 @@
-#include "chip8/Display.h"
 #include "Display.h"
 
-Display::Display(const std::string &title) : width_(WIDTH*10), height_(HEIGHT*10)
+Display::Display(const std::string& title) : width_(WIDTH*10), height_(HEIGHT*10)
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
@@ -110,21 +109,19 @@ void Display::render()
     SDL_RenderPresent(renderer_);
 }
 
-void Display::poll_events()
-{
-
-}
-
-bool Display::is_running() const
+bool Display::poll_events(Keyboard& keyboard) const
 {
     SDL_Event event;
 
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
-        {
             return false;
-        }
+        if (event.type == SDL_KEYDOWN)
+            keyboard.key_down(event.key.keysym.sym);
+
+        if (event.type == SDL_KEYUP)
+            keyboard.key_up(event.key.keysym.sym);
     }
 
     return true;

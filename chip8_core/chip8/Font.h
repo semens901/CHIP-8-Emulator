@@ -20,4 +20,7 @@ static constexpr uint8_t FONT[80] = {
     0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
+
+static constexpr uint8_t FONT_START = 0x050;
+static constexpr uint8_t FONT_END = 0x09F;
 #endif //FONT_H

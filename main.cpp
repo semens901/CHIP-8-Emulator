@@ -1,12 +1,14 @@
-#include <iostream>
-#include <chrono>
-#include <thread>
-
 #include "chip8/Display.h"
 #include "chip8/Memory.h"
 #include "chip8/Keyboard.h"
 #include "chip8/CPU.h"
+#include "chip8/Speaker.h"
+
+#include <iostream>
+#include <chrono>
+#include <thread>
 #include <filesystem>
+
 
 constexpr int CPU_HZ = 700;
 constexpr double CPU_STEP = 1.0 / CPU_HZ;
@@ -19,6 +21,7 @@ int main()
     Memory memory;
     Keyboard keyboard;
     Display display("CHIP8");
+    Speaker speaker;
     
     std::cout << std::filesystem::current_path() << std::endl;
     if(!memory.load_rom("../roms/test.ch8"))
@@ -26,7 +29,7 @@ int main()
         std::cout << "Failed load rom\n";
         return 1;
     }
-    CPU cpu(memory, display, keyboard);
+    CPU cpu(memory, display, keyboard, speaker);
 
     using clock = std::chrono::steady_clock;
 
@@ -38,18 +41,13 @@ int main()
     const double cpu_step = 1.0 / 700.0;   // ~700 Hz
     const double timer_step = 1.0 / 60.0;   // 60 Hz
 
-    while (display.is_running())
+    while (display.poll_events(keyboard))
     {
         auto now = clock::now();
         std::chrono::duration<double> delta = now - last_time;
         last_time = now;
 
         double dt = delta.count();
-
-        // ─────────────────────────────
-        // INPUT
-        // ─────────────────────────────
-        display.poll_events();
 
         // ─────────────────────────────
         // CPU (fixed rate)

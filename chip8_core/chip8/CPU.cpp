@@ -10,6 +10,19 @@ bool CPU::execute_instruction()
 {
     bool pc_modified = false;
 
+    if (waiting_for_key_)
+    {
+        int key = keyboard_.get_pressed_key();
+
+        if (key != -1)
+        {
+            registers_.ur.V[waiting_register_] = key;
+            waiting_for_key_ = false;
+        }
+
+        return true;
+    }
+
     switch (opcode_.op)
     {
         // ─────────────────────────────
@@ -275,6 +288,7 @@ bool CPU::execute_instruction()
         // ─────────────────────────────
         case 0xD:
         {
+            std::cout << "opcode 0xD\n";
             uint8_t vx = registers_.ur.V[opcode_.x];
             uint8_t vy = registers_.ur.V[opcode_.y];
 
@@ -309,7 +323,7 @@ bool CPU::execute_instruction()
         // ─────────────────────────────
         case 0xE:
         {
-            /*
+            
             std::cout << "opcode 0xE\n";
             switch (opcode_.nn)
             {
@@ -335,7 +349,7 @@ bool CPU::execute_instruction()
                     break;
                 }
             }
-                */
+                
             break;
         }
 
@@ -350,6 +364,74 @@ bool CPU::execute_instruction()
                 case 0x07:
                 {
                     std::cout << "opcode 0xF \t0x07\n";
+                    registers_.ur.V[opcode_.x] = registers_.DT;
+                    break;
+                }
+                case 0x0A:
+                {
+                    std::cout << "opcode 0xF \t0x0A\n";
+                    waiting_for_key_ = true;
+                    waiting_register_ = opcode_.x;
+
+                    pc_modified = true;
+
+                    break;
+                }
+                case 0x15:
+                {
+                    std::cout << "opcode 0xF \t0x15\n";
+                    registers_.DT = registers_.ur.V[opcode_.x];
+                    break;
+                }
+                case 0x18:
+                {
+                    std::cout << "opcode 0xF \t0x18\n";
+                    registers_.ST = registers_.ur.V[opcode_.x];
+                    break;
+                }
+                case 0x1E:
+                {
+                    std::cout << "opcode 0xF \t0x1E\n";
+                    registers_.I += registers_.ur.V[opcode_.x];
+                    break;
+                }
+                case 0x29:
+                {
+                    std::cout << "opcode 0xF \t0x29\n";
+                    uint8_t digit = registers_.ur.V[opcode_.x] & 0x0F;
+
+                    registers_.I = FONT_START + digit * 5;
+                    break;
+                }
+                case 0x33:
+                {
+                    std::cout << "opcode 0xF \t0x33\n";
+                    uint8_t value = registers_.ur.V[opcode_.x];
+
+                    memory_.write(registers_.I,     value / 100);
+                    memory_.write(registers_.I + 1, (value / 10) % 10);
+                    memory_.write(registers_.I + 2, value % 10);
+                    break;
+                }
+                case 0x55:
+                {
+                    std::cout << "opcode 0xF \t0x55\n";
+                    for (uint8_t i = 0; i <= opcode_.x; ++i)
+                    {
+                        memory_.write(
+                            registers_.I + i,
+                            registers_.ur.V[i]
+                        );
+                    }
+                    break;
+                }
+                case 0x65:
+                {
+                    std::cout << "opcode 0xF \t0x65\n";
+                    for (uint8_t i = 0; i <= opcode_.x; ++i)
+                    {
+                        registers_.ur.V[i] = memory_.read(registers_.I + i);
+                    }
                     break;
                 }
             };
@@ -389,5 +471,13 @@ void CPU::update_timers()
         --registers_.DT;
 
     if (registers_.ST > 0)
+    {
+        std::cout << "BBBBBBBBEEEEEEEEEEEEEEEEEEEPPPPPPPPPPPPPPPPPPPPP!!!!!!!!!!!!\n";
+        speaker_.start();
         --registers_.ST;
+    }
+    else
+    {
+        speaker_.stop();
+    }
 }

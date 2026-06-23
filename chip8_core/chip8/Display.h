@@ -6,6 +6,8 @@
 #include <string>
 #include <stdexcept>
 
+#include "Keyboard.h"
+
 static constexpr uint8_t WIDTH = 64;
 static constexpr uint8_t HEIGHT = 32;
 static constexpr int SCALE  = 10;
@@ -25,9 +27,8 @@ public:
     uint8_t get_pixel(const uint8_t& x, const uint8_t& y) const;
     void draw_screen();
     void render();
-    void poll_events();
 
-    bool is_running() const;
+    bool poll_events(Keyboard& keyboard) const;
 private:
     SDL_Window* window_ = nullptr;
     SDL_Renderer* renderer_ = nullptr;

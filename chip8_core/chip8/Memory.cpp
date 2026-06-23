@@ -1,6 +1,14 @@
 #include "chip8/Memory.h"
 #include "Memory.h"
 
+Memory::Memory()
+{
+    for(uint8_t i = FONT_START; i <= FONT_END; ++i)
+    {
+        memory_[i] = FONT[i-FONT_START];
+    }
+}
+
 uint8_t Memory::read(uint16_t address) const
 {
     return memory_[address];
@@ -8,6 +16,7 @@ uint8_t Memory::read(uint16_t address) const
 
 void Memory::write(uint16_t address, uint8_t value)
 {
+    memory_[address] = value;
 }
 
 uint8_t *Memory::get_address(uint16_t emulated_address)

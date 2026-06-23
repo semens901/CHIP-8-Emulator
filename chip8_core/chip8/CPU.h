@@ -11,13 +11,15 @@
 #include "Display.h"
 #include "Font.h"
 #include "Keyboard.h"
+#include "Font.h"
+#include "Speaker.h"
 
 static constexpr uint8_t STACK_SIZE = 16;
 
 class CPU
 {
 public:
-    CPU(Memory& memory, Display& display, Keyboard& keyboard) : registers_{
+    CPU(Memory& memory, Display& display, Keyboard& keyboard, Speaker& speaker) : registers_{
         .I = 0x0,
         .PC = 0x200,  
         .SP = 0x0, 
@@ -27,6 +29,7 @@ public:
         memory_(memory),
         display_(display),
         keyboard_(keyboard),
+        speaker_(speaker),
         stack_{0} {};
 
     void read_instruction();
@@ -68,11 +71,14 @@ private:
 
     
     Registers registers_;
+    bool waiting_for_key_ = false;
+    uint8_t waiting_register_;
     Opcode opcode_;
     uint16_t stack_[STACK_SIZE];
     Memory& memory_;
     Display& display_;
     Keyboard& keyboard_;
+    Speaker& speaker_;
 };
 
 #endif //CPU_H
