@@ -9,22 +9,28 @@
 #include <thread>
 #include <filesystem>
 
-
 constexpr int CPU_HZ = 700;
 constexpr double CPU_STEP = 1.0 / CPU_HZ;
 
 double accumulator = 0.0;
 auto last_time = std::chrono::steady_clock::now();
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc < 2)
+    {
+        std::cerr << "Usage: chip8_emulator <rom>\n";
+        return 1;
+    }
+    
+
     Memory memory;
     Keyboard keyboard;
     Display display("CHIP8");
     Speaker speaker;
     
     std::cout << std::filesystem::current_path() << std::endl;
-    if(!memory.load_rom("../roms/test.ch8"))
+    if(!memory.load_rom(argv[1]))
     {
         std::cout << "Failed load rom\n";
         return 1;

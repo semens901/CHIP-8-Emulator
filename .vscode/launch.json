@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch chip8_emulator with test ROM",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/chip8_emulator",
+            "args": ["${workspaceFolder}/roms/test.ch8"],
+            "cwd": "${workspaceFolder}/build",
+            "stopAtEntry": false,
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "logging": { "engineLogging": false }
+        }
+    ]
+}
