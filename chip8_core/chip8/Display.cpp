@@ -28,7 +28,7 @@ Display::Display(const std::string& title) : width_(WIDTH*10), height_(HEIGHT*10
         throw std::runtime_error(SDL_GetError());
     }
 
-    // чёрный фон сразу
+    // black background immediately
     SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
 }
 
@@ -40,11 +40,47 @@ Display::~Display()
     SDL_Quit();
 }
 
-void Display::render_frame()
+bool Display::render_frame()
 {
-    clear_renderer();
-    draw_screen();
-    render();
+    /*
+        This function is responsible for rendering a frame to the display. 
+        It first clears the renderer, then draws the current state of the screen, 
+        and finally presents the rendered frame. 
+        If any errors occur during these operations, 
+        they are caught and logged, and the function returns false to indicate failure.
+        The function returns true if the frame was rendered successfully.
+    */
+    try
+    {
+        clear_renderer();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error clearing renderer: " << e.what() << std::endl;
+        return false;
+    }
+    
+    try
+    {
+        draw_screen();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error drawing screen: " << e.what() << std::endl;
+        return false;
+    }
+
+    try
+    {
+        render();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error presenting renderer: " << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 void Display::clear()
@@ -58,8 +94,14 @@ void Display::clear()
 
 void Display::clear_renderer()
 {
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
-    SDL_RenderClear(renderer_);
+    if(SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255))
+    {
+        throw std::runtime_error(SDL_GetError());
+    }
+    if(SDL_RenderClear(renderer_))
+    {
+        throw std::runtime_error(SDL_GetError());
+    }
 }
 
 void Display::set_pixel(uint8_t x, uint8_t y, uint8_t value)
@@ -84,7 +126,10 @@ uint8_t Display::xor_pixel(const uint8_t &x, const uint8_t &y)
 void Display::draw_screen()
 {
     // Рисовать включенные пиксели белым цветом
-    SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
+    if(SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255))
+    {
+        throw std::runtime_error(SDL_GetError());
+    }
 
     for (int y = 0; y < HEIGHT; ++y)
     {
@@ -99,14 +144,25 @@ void Display::draw_screen()
             pixel.w = SCALE;
             pixel.h = SCALE;
 
-            SDL_RenderFillRect(renderer_, &pixel);
+            if(SDL_RenderFillRect(renderer_, &pixel))
+            {
+                throw std::runtime_error(SDL_GetError());
+            }
         }
     }
 }
 
 void Display::render()
 {
-    SDL_RenderPresent(renderer_);
+    try
+    {
+        SDL_RenderPresent(renderer_);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error presenting renderer: " << e.what() << std::endl;
+        throw; // Re-throw the exception to be handled by the caller
+    }
 }
 
 bool Display::poll_events(Keyboard& keyboard) const

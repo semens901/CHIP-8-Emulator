@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 #include "Keyboard.h"
 
@@ -18,7 +19,7 @@ public:
     Display(const std::string& title);
     ~Display();
 
-    void render_frame();
+    bool render_frame();
 
     void clear();
     void clear_renderer();

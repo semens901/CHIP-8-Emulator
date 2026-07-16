@@ -22,70 +22,93 @@ int main(int argc, char** argv)
         std::cerr << "Usage: chip8_emulator <rom>\n";
         return 1;
     }
-    
 
     Memory memory;
     Keyboard keyboard;
-    Display display("CHIP8");
-    Speaker speaker;
     
-    std::cout << std::filesystem::current_path() << std::endl;
-    if(!memory.load_rom(argv[1]))
+    try
     {
-        std::cout << "Failed load rom\n";
-        return 1;
+        Display display("CHIP-8 Emulator");
+        Speaker speaker;
+
+        std::cout << std::filesystem::current_path() << std::endl;
+
+        if(!memory.load_rom(argv[1]))
+        {
+            std::cout << "Failed load rom\n";
+            return 1;
+        }
+
+        CPU cpu(memory, display, keyboard, speaker);
+
+        using clock = std::chrono::steady_clock;
+
+        auto last_time = clock::now();
+
+        double cpu_accumulator = 0.0;
+        double timer_accumulator = 0.0;
+
+        const double cpu_step = 1.0 / 700.0;   // ~700 Hz
+        const double timer_step = 1.0 / 60.0;   // 60 Hz
+
+        while (display.poll_events(keyboard))
+        {
+            auto now = clock::now();
+            std::chrono::duration<double> delta = now - last_time;
+            last_time = now;
+
+            double dt = delta.count();
+
+            // ─────────────────────────────
+            // CPU (fixed rate)
+            // ─────────────────────────────
+            cpu_accumulator += dt;
+
+            int safety = 1000;
+
+            while (cpu_accumulator >= cpu_step && safety--)
+            {
+                try
+                {
+                    cpu.cycle();
+                }
+                catch (...)
+                {
+                    std::cerr << "Failed to execute instruction\n";
+                    return 1;
+                }
+                cpu_accumulator -= cpu_step;
+            }
+
+            // ─────────────────────────────
+            // TIMERS (60 Hz)
+            // ─────────────────────────────
+            timer_accumulator += dt;
+
+            while (timer_accumulator >= timer_step)
+            {
+                cpu.update_timers();
+                timer_accumulator -= timer_step;
+            }
+
+            // ─────────────────────────────
+            // RENDER (60 FPS or free)
+            // ─────────────────────────────
+            if (!display.render_frame())
+            {
+                std::cerr << "Failed to render frame\n";
+                return 1;
+                break;
+            }
+
+            // optional: removes 100% CPU usage
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     }
-    CPU cpu(memory, display, keyboard, speaker);
-
-    using clock = std::chrono::steady_clock;
-
-    auto last_time = clock::now();
-
-    double cpu_accumulator = 0.0;
-    double timer_accumulator = 0.0;
-
-    const double cpu_step = 1.0 / 700.0;   // ~700 Hz
-    const double timer_step = 1.0 / 60.0;   // 60 Hz
-
-    while (display.poll_events(keyboard))
+    catch (const std::exception& e)
     {
-        auto now = clock::now();
-        std::chrono::duration<double> delta = now - last_time;
-        last_time = now;
-
-        double dt = delta.count();
-
-        // ─────────────────────────────
-        // CPU (fixed rate)
-        // ─────────────────────────────
-        cpu_accumulator += dt;
-
-        int safety = 1000;
-
-        while (cpu_accumulator >= cpu_step && safety--)
-        {
-            cpu.cycle();
-            cpu_accumulator -= cpu_step;
-        }
-
-        // ─────────────────────────────
-        // TIMERS (60 Hz)
-        // ─────────────────────────────
-        timer_accumulator += dt;
-
-        while (timer_accumulator >= timer_step)
-        {
-            cpu.update_timers();
-            timer_accumulator -= timer_step;
-        }
-
-        // ─────────────────────────────
-        // RENDER (можно 60 FPS или free)
-        // ─────────────────────────────
-        display.render_frame();
-
-        // optional: убирает 100% CPU usage
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::cerr << "Failed to initialize display: " << e.what() << std::endl;
+        return 1;
     }
 
     return 0;

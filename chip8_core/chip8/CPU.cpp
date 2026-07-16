@@ -437,6 +437,17 @@ bool CPU::execute_instruction()
             };
             break;
         }
+        default:
+        {
+            std::cout << "Unknown opcode: "
+                << std::hex
+                << memory_.fetch_opcode(registers_.PC)
+                << "\n"
+                << "PC = "
+                << registers_.PC
+                << '\n';
+            return false;
+        }
     }
 
     // ─────────────────────────────
@@ -455,7 +466,12 @@ bool CPU::execute_instruction()
 void CPU::cycle()
 {
     read_instruction();
-    execute_instruction();
+
+    if(!execute_instruction())
+    {
+        std::cerr << "Failed to execute instruction\n";
+        throw;
+    }
 }
 
 void CPU::reset()
