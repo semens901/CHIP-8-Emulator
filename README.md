@@ -1,152 +1,152 @@
 # CHIP-8 Emulator
 
-Полнофункциональный эмулятор CHIP-8, написанный на C++20 с использованием SDL2 для графики. Проект включает основной модуль эмулятора, графический интерфейс и набор тестов.
+A full-featured CHIP-8 emulator written in C++20 using SDL2 for graphics. The project includes the core emulator module, a graphical interface, and a test suite.
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-- [Что такое CHIP-8?](#что-такое-chip-8)
-- [Возможности](#возможности)
-- [Структура проекта](#структура-проекта)
-- [Требования](#требования)
-- [Установка и сборка](#установка-и-сборка)
-- [Использование](#использование)
-- [Управление](#управление)
-- [Архитектура](#архитектура)
-- [Тестирование](#тестирование)
-- [Разработка](#разработка)
+- [What is CHIP-8?](#what-is-chip-8)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Installation and Build](#installation-and-build)
+- [Usage](#usage)
+- [Controls](#controls)
+- [Architecture](#architecture)
+- [Testing](#testing)
+- [Development](#development)
 
-## Что такое CHIP-8?
+## What is CHIP-8?
 
-CHIP-8 — это виртуальная машина (интерпретатор), предназначенная для простых 8-битных компьютерных игр 1970-х годов. Это вымышленная машина, используемая в образовательных целях и для понимания принципов работы эмуляторов.
+CHIP-8 is a virtual machine (interpreter) designed for simple 8-bit computer games from the 1970s. It is a fictional machine used for educational purposes and to understand the principles behind emulators.
 
-### Основные характеристики CHIP-8:
-- **Память**: 4096 байт
-- **Регистры**: 16 регистров общего назначения (V0-VF)
-- **Дисплей**: 64×32 монохромный экран
-- **Звук**: Встроенный динамик
-- **Набор команд**: 36 команд
-- **Стек**: 16 уровней вложенности подпрограмм
+### Key characteristics of CHIP-8:
+- **Memory**: 4096 bytes
+- **Registers**: 16 general-purpose registers (V0-VF)
+- **Display**: 64×32 monochrome screen
+- **Sound**: Built-in speaker
+- **Instruction set**: 36 instructions
+- **Stack**: 16 levels of subroutine nesting
 
-## Возможности
+## Features
 
-✅ Полная реализация архитектуры CHIP-8  
-✅ Графический интерфейс на базе SDL2  
-✅ Поддержка загрузки ROM-файлов  
-✅ Эмуляция процессора с частотой 700 Hz  
-✅ Таймеры задержки и звука  
-✅ 16-клавишная клавиатура  
-✅ Полный набор инструкций (35+ команд)  
-✅ Встроенные тесты компонентов  
+✅ Full implementation of the CHIP-8 architecture  
+✅ SDL2-based graphical interface  
+✅ Support for loading ROM files  
+✅ CPU emulation at 700 Hz  
+✅ Delay and sound timers  
+✅ 16-key keyboard  
+✅ Full instruction set (35+ instructions)  
+✅ Built-in component tests  
 
-## Структура проекта
+## Project Structure
 
 ```
 .
-├── chip8_core/                 # Основной модуль эмулятора
+├── chip8_core/                 # Core emulator module
 │   └── chip8/
-│       ├── CPU.h / CPU.cpp      # Процессор (выполнение команд)
-│       ├── Memory.h / Memory.cpp # Память (4096 байт)
-│       ├── Display.h / Display.cpp # Дисплей (64×32)
-│       ├── Keyboard.h / Keyboard.cpp # Клавиатура (16 клавиш)
-│       ├── Speaker.h / Speaker.cpp   # Звук
-│       ├── Opcode.h / Opcode.cpp     # Декодирование команд
-│       └── Font.h               # Встроенные шрифты
-├── tests/                      # Модульные тесты
-│   ├── CPUTests.cpp/h          # Тесты процессора
-│   ├── DisplayTests.cpp/h      # Тесты дисплея
-│   ├── OpcodeTests.cpp/h       # Тесты команд
+│       ├── CPU.h / CPU.cpp      # Processor (instruction execution)
+│       ├── Memory.h / Memory.cpp # Memory (4096 bytes)
+│       ├── Display.h / Display.cpp # Display (64×32)
+│       ├── Keyboard.h / Keyboard.cpp # Keyboard (16 keys)
+│       ├── Speaker.h / Speaker.cpp   # Sound
+│       ├── Opcode.h / Opcode.cpp     # Instruction decoding
+│       └── Font.h               # Built-in fonts
+├── tests/                      # Unit tests
+│   ├── CPUTests.cpp/h          # CPU tests
+│   ├── DisplayTests.cpp/h      # Display tests
+│   ├── OpcodeTests.cpp/h       # Opcode tests
 │   └── CMakeLists.txt
-├── roms/                       # Примеры ROM-файлов
+├── roms/                       # Example ROM files
 │   └── test.ch8
-├── main.cpp                    # Главная программа
-├── CMakeLists.txt              # Конфигурация CMake
+├── main.cpp                    # Main program
+├── CMakeLists.txt              # CMake configuration
 ├── LICENSE
-└── README.md                   # Этот файл
+└── README.md                   # This file
 ```
 
-## Требования
+## Requirements
 
-### Зависимости:
-- **C++20** или выше
-- **CMake** 3.20 или выше
-- **SDL2** (для графики)
-- **GCC/Clang** (компилятор C++)
+### Dependencies:
+- **C++20** or newer
+- **CMake** 3.20 or newer
+- **SDL2** (for graphics)
+- **GCC/Clang** (C++ compiler)
 
-### Установка зависимостей
+### Installing dependencies
 
-#### На Ubuntu/Debian:
+#### On Ubuntu/Debian:
 ```bash
 sudo apt-get install build-essential cmake libsdl2-dev
 ```
 
-#### На Fedora/RHEL:
+#### On Fedora/RHEL:
 ```bash
 sudo dnf install gcc-c++ cmake SDL2-devel
 ```
 
-#### На macOS:
+#### On macOS:
 ```bash
 brew install cmake sdl2
 ```
 
-## Установка и сборка
+## Installation and Build
 
-### 1. Клонирование репозитория
+### 1. Clone the repository
 ```bash
 git clone https://github.com/yourname/CHIP-8-Emulator.git
 cd CHIP-8-Emulator
 ```
 
-### 2. Создание директории для сборки
+### 2. Create a build directory
 ```bash
 mkdir build
 cd build
 ```
 
-### 3. Конфигурирование CMake
+### 3. Configure CMake
 ```bash
 cmake ..
 ```
 
-### 4. Сборка проекта
+### 4. Build the project
 ```bash
 cmake --build .
 ```
 
-### 5. Запуск тестов (опционально)
+### 5. Run tests (optional)
 ```bash
 ctest --verbose
-# или
+# or
 cd tests && ./chip8_tests
 ```
 
-После сборки будут созданы:
-- **chip8_emulator** — основной исполняемый файл эмулятора
-- **chip8_tests** — программа с тестами
+After the build, the following files will be created:
+- **chip8_emulator** — the main emulator executable
+- **chip8_tests** — the test program
 
-## Использование
+## Usage
 
-### Запуск эмулятора:
+### Run the emulator:
 ```bash
 ./chip8_emulator path/to/rom.ch8
 ```
 
-### Примеры:
+### Example:
 ```bash
 ./chip8_emulator ../roms/test.ch8
 ```
 
-### Параметры запуска:
-Программа требует один обязательный аргумент — путь до ROM-файла. 
+### Command-line arguments:
+The program requires one mandatory argument — the path to the ROM file.
 
-Примечание: Частота процессора жестко установлена на 700 Hz, что является стандартом для большинства CHIP-8 программ.
+Note: The CPU frequency is hard-coded to 700 Hz, which is the standard for most CHIP-8 programs.
 
-## Управление
+## Controls
 
-Клавиатура CHIP-8 состоит из 16 клавиш (0-9, A-F):
+The CHIP-8 keyboard consists of 16 keys (0-9, A-F):
 
 ```
-Оригинальная CHIP-8 клавиатура:    Современная раскладка клавиатуры:
+Original CHIP-8 keyboard:      Modern keyboard layout:
 ┌─────────────────────┐            ┌─────────────────────┐
 │ 1 2 3 C             │            │ 1 2 3 4             │
 │ 4 5 6 D             │            │ Q W E R             │
@@ -161,122 +161,122 @@ cd tests && ./chip8_tests
 0x5  = Q              0xE  = F
 0x6  = W              0xF  = R
 0x7  = A              0x0  = Space
-0x8  = S              (остальные клавиши)
+0x8  = S              (other keys)
 0x9  = D
 ```
 
-**Управление окном:**
-- `ESC` или закрытие окна — выход из эмулятора
+**Window controls:**
+- `ESC` or closing the window — exits the emulator
 
-## Архитектура
+## Architecture
 
-### Компоненты:
+### Components:
 
-#### 1. **CPU (Процессор)**
-- Выполняет 2-байтовые инструкции
-- Содержит 16 регистров общего назначения (V0-VF)
-- Имеет программный счетчик (PC) и указатель стека (SP)
-- Таймеры задержки (DT) и звука (ST)
+#### 1. **CPU**
+- Executes 2-byte instructions
+- Contains 16 general-purpose registers (V0-VF)
+- Has a program counter (PC) and stack pointer (SP)
+- Includes delay (DT) and sound (ST) timers
 
-#### 2. **Memory (Память)**
-- 4096 байт оперативной памяти
-- Загрузка ROM-файлов с адреса 0x200
-- Встроенные шрифты в памяти
+#### 2. **Memory**
+- 4096 bytes of RAM
+- Loads ROM files from address 0x200
+- Stores built-in fonts in memory
 
-#### 3. **Display (Дисплей)**
-- Монохромный экран 64×32 пикселя
-- XOR-рисование спрайтов
-- Визуализация через SDL2
+#### 3. **Display**
+- 64×32 monochrome display
+- XOR-based sprite drawing
+- Rendering through SDL2
 
-#### 4. **Keyboard (Клавиатура)**
-- Отслеживание состояния 16 клавиш
-- Обработка событий SDL2
+#### 4. **Keyboard**
+- Tracks the state of 16 keys
+- Handles SDL2 events
 
-#### 5. **Speaker (Звук)**
-- Издание звука при активном таймере звука (ST)
-- Интеграция с SDL2
+#### 5. **Speaker**
+- Produces sound when the sound timer (ST) is active
+- Integrates with SDL2
 
-#### 6. **Opcode (Декодирование команд)**
-- Парсинг и декодирование 2-байтовых команд
-- Интерпретация всех 35+ инструкций CHIP-8
+#### 6. **Opcode**
+- Parses and decodes 2-byte instructions
+- Interprets all 35+ CHIP-8 instructions
 
-### Цикл выполнения:
+### Execution loop:
 
 ```
 ┌─────────────────────────────────────┐
-│  Чтение команды из памяти (Fetch)   │
+│  Fetch instruction from memory      │
 ├─────────────────────────────────────┤
-│  Декодирование команды (Decode)     │
+│  Decode instruction                 │
 ├─────────────────────────────────────┤
-│  Выполнение команды (Execute)       │
+│  Execute instruction                │
 ├─────────────────────────────────────┤
-│  Обновление таймеров                │
+│  Update timers                      │
 ├─────────────────────────────────────┤
-│  Отрисовка экрана (Render)          │
+│  Render screen                      │
 └─────────────────────────────────────┘
 ```
 
-## Тестирование
+## Testing
 
-Проект включает набор модульных тестов для проверки компонентов:
+The project includes a set of unit tests to validate its components:
 
-### Запуск всех тестов:
+### Run all tests:
 ```bash
 cd build
 ctest --verbose
 ```
 
-### Запуск конкретного теста:
+### Run a specific test:
 ```bash
 cd build/tests
 ./chip8_tests
 ```
 
-### Тестовые модули:
-- **CPUTests** — проверка команд процессора
-- **DisplayTests** — проверка растеризации
-- **OpcodeTests** — проверка декодирования команд
+### Test modules:
+- **CPUTests** — validates CPU instructions
+- **DisplayTests** — validates rasterization
+- **OpcodeTests** — validates instruction decoding
 
-## Разработка
+## Development
 
-### Структура кода:
+### Code structure:
 
-Каждый компонент разделен на:
-- **Заголовочный файл (.h)** — объявление интерфейса
-- **Реализация (.cpp)** — основная логика
+Each component is split into:
+- **Header file (.h)** — interface declaration
+- **Implementation file (.cpp)** — core logic
 
-### Стандарты кодирования:
+### Coding standards:
 
-- C++20 стандарт
-- Использование `uint8_t`, `uint16_t` для безопасности типов
-- Комментарии на английском языке
-- Следование RAII принципам
+- C++20 standard
+- Use `uint8_t` and `uint16_t` for type safety
+- Comments in English
+- Follow RAII principles
 
-### Добавление новой функциональности:
+### Adding new functionality:
 
-1. Модифицируйте нужный компонент в `chip8_core/chip8/`
-2. Добавьте тесты в `tests/`
-3. Выполните сборку: `cmake --build .`
-4. Запустите тесты: `ctest --verbose`
+1. Modify the relevant component in `chip8_core/chip8/`
+2. Add tests in `tests/`
+3. Build the project: `cmake --build .`
+4. Run the tests: `ctest --verbose`
 
-### Полезные ресурсы:
+### Useful resources:
 
 - [CHIP-8 Wikipedia](https://en.wikipedia.org/wiki/CHIP-8)
 - [CHIP-8 Technical Reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
 - [SDL2 Documentation](https://wiki.libsdl.org/)
 
-## Известные ограничения
+## Known limitations
 
-- Некоторые расширения CHIP-8 (SUPER-CHIP) не поддерживаются
-- Звук генерируется простым тоном без сложного синтеза
-- Частота процессора фиксирована на 700 Hz
+- Some CHIP-8 extensions (SUPER-CHIP) are not supported
+- Sound is generated with a simple tone without advanced synthesis
+- CPU frequency is fixed at 700 Hz
 
-## Лицензия
+## License
 
-Проект распространяется под лицензией, указанной в файле [LICENSE](LICENSE).
+The project is distributed under the license specified in [LICENSE](LICENSE).
 
 ---
 
-**Автор:** semens901  
-**Дата последнего обновления:** 2026  
-**Версия:** 1.0
+**Author:** semens901  
+**Last updated:** 2026  
+**Version:** 1.0
